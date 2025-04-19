@@ -5,6 +5,7 @@
 # Based on AboutNil in the Ruby Koans
 #
 
+from types import NoneType
 from runner.koan import *
 
 class AboutNone(Koan):
@@ -12,6 +13,8 @@ class AboutNone(Koan):
     def test_none_is_an_object(self):
         # "Unlike NULL in a lot of languages"
         self.assertEqual(True, isinstance(None, object))
+        self.assertTrue(None.__class__ == NoneType)
+        self.assertTrue(isinstance(None, NoneType))
 
     def test_none_is_universal(self):
         # "There is only one None"
