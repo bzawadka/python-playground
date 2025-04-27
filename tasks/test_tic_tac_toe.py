@@ -64,12 +64,24 @@ def test_is_draw():
 
 def test_is_winner():
     game = TicTacToe()
-    game.board = [['X', 'X', 'X'],
-                  ['O', 'O', 'O'],
-                  ['O', 'X', 'O']]
-    assert game.is_board_full() is True
+    game.board = [['O', 'O', 'O'],
+                  ['X', 'X', 'O'],
+                  [' ', 'X', 'X']]
+    assert game.is_board_full() is False
     assert game.is_draw() is False
-    assert game.winner == 'X'
+    assert game.winner == 'O'
+
+    game2 = TicTacToe()
+    game2.make_move('X', 1, 1)
+    game2.make_move('O', 0, 0)
+    game2.make_move('X', 1, 0)
+    game2.make_move('O', 2, 1)
+    assert game2.winner is None
+    game2.make_move('X', 1, 2)
+    game2.make_move('O', 0, 1)
+    game2.make_move('X', 2, 2)
+    game2.make_move('O', 0, 2)
+    assert game2.winner is 'O'
 
 
 def __main__():
