@@ -10,6 +10,7 @@ def test_game_init():
                           [' ', ' ', ' '],
                           [' ', ' ', ' ']]
 
+
 def test_make_move():
     game = TicTacToe()
     if game.current_player == 'X':
@@ -49,6 +50,26 @@ def test_move_cannot_overwrite():
     assert move_made is False
     assert game.board[1][1] == 'X'
     assert game.current_player == 'O'
+
+
+def test_is_draw():
+    game = TicTacToe()
+    game.board = [['X', 'O', 'X'],
+                  ['O', 'X', 'O'],
+                  ['O', 'X', 'O']]
+    game.winner = None
+    assert game.is_draw() is True
+    assert game.is_board_full() is True
+
+
+def test_is_winner():
+    game = TicTacToe()
+    game.board = [['X', 'X', 'X'],
+                  ['O', 'O', 'O'],
+                  ['O', 'X', 'O']]
+    assert game.is_board_full() is True
+    assert game.is_draw() is False
+    assert game.winner == 'X'
 
 
 def __main__():
