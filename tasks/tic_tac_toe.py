@@ -46,7 +46,7 @@ class TicTacToe:
 
         # Check diagonals
         if all(self.board[i][i] == player for i in range(self.board_size)) or \
-           all(self.board[i][self.board_size - 1 - i] == player for i in range(self.board_size)):
+           all(self.board[i][self.board_size - i - 1] == player for i in range(self.board_size)):
             return True
 
         return False

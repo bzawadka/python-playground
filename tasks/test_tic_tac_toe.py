@@ -63,6 +63,7 @@ def test_is_draw():
 
 
 def test_is_winner():
+    # horizontal
     game = TicTacToe()
     game.board = [['O', 'O', 'O'],
                   ['X', 'X', 'O'],
@@ -71,6 +72,7 @@ def test_is_winner():
     assert game.is_draw() is False
     assert game.winner == 'O'
 
+    # manual
     game2 = TicTacToe()
     game2.make_move('X', 1, 1)
     game2.make_move('O', 0, 0)
@@ -82,6 +84,30 @@ def test_is_winner():
     game2.make_move('X', 2, 2)
     game2.make_move('O', 0, 2)
     assert game2.winner is 'O'
+
+    # vertical
+    game3 = TicTacToe()
+    game3.board = [['O', ' ', 'X'],
+                  ['O', 'X', ' '],
+                  ['O', ' ', ' ']]
+    assert game3.is_draw() is False
+    assert game3.winner == 'O'
+
+    # diagonal
+    game4 = TicTacToe()
+    game4.board = [['O', ' ', 'X'],
+                  [' ', 'O', 'X'],
+                  [' ', ' ', 'O']]
+    assert game4.is_draw() is False
+    assert game4.winner == 'O'
+
+    # diagonal
+    game5 = TicTacToe()
+    game5.board = [['X', ' ', 'O'],
+                  ['X', 'O', ' '],
+                  ['O', ' ', ' ']]
+    assert game5.is_draw() is False
+    assert game5.winner == 'O'
 
 
 def __main__():
