@@ -50,3 +50,6 @@ class TicTacToe:
             return True
 
         return False
+    
+    def create_problem(self):
+        raise RuntimeError("problem")

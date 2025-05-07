@@ -9,6 +9,9 @@ def test_game_init():
     assert game.board == [[' ', ' ', ' '],
                           [' ', ' ', ' '],
                           [' ', ' ', ' ']]
+    # another way    
+    for row in game.board:
+        assert all(cell == ' ' for cell in row) is True
 
 
 def test_make_move():
@@ -108,6 +111,16 @@ def test_is_winner():
                   ['O', ' ', ' ']]
     assert game5.is_draw() is False
     assert game5.winner == 'O'
+
+
+def test_some_exception():
+    game = TicTacToe()
+    try:
+        game.create_problem()
+    except Exception as e:
+        msg = e.args[0]
+
+    assert msg is "problem"
 
 
 def __main__():
