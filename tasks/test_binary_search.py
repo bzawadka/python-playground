@@ -6,9 +6,9 @@ class BinarySearch:
         while left <= right:
             mid = (left + right) // 2
             guess = arr[mid]
-            if guess == target:
+            if target == guess:
                 return mid
-            elif guess > target:
+            elif target < guess:
                 right = mid - 1
             else:
                 left = mid + 1
