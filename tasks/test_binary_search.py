@@ -14,7 +14,7 @@ class BinarySearch:
                 left = mid + 1
 
         return -1
-    
+
 
 def test_binary_search():
     bs = BinarySearch()
@@ -37,4 +37,4 @@ def test_binary_search_edge_cases():
 
 if __name__ == "__main__":
     test_binary_search()
-    print("all tests run")  
+    print("all tests run")
