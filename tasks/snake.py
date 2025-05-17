@@ -3,53 +3,91 @@ class Game:
     default_board_width = 21
     default_board_height = 15
     default_snake_length = 3
+    allowed_instructions = {'r', 'l', 'u', 'd'}
+    eatable_item = 'o'
+    snake_body = 'x'
 
-    def __init__(self, board_width: int = default_board_width, board_height: int = default_board_height):
+    def __init__(self, 
+                 board_width: int = default_board_width, 
+                 board_height: int = default_board_height, 
+                 snake_length: int = default_snake_length):
         self.game_over = False
         self.board = [[' ' for _ in range(board_width)] for _ in range(board_height)]
-        self.draw_initial_snake(board_width)
+        self.instructions = []
+        self.snake_has_eaten = False
+        self.draw_initial_snake(board_width, snake_length)
 
 
-    def draw_initial_snake(self, board_width):
+    def draw_initial_snake(self, board_width, snake_length) -> None:
         default_snake_position_w = board_width // 2
         default_snake_position_h = 1
         self.snake_direction = 'd'
 
-        # draw initial snake
         self.snake = []
-        for i in range(self.default_snake_length):
+        for i in range(snake_length):
             x = default_snake_position_w
             y = i + default_snake_position_h
-            self.board[y][x] = 'x'
+            self.board[y][x] = self.snake_body
             self.snake.append((x, y))
             self.snake_head = (x, y)
-    
-    
-    def tick(self):
-        # assume no moves/instructions for now
+
+
+    def instruct(self, instr: str) -> bool:
+        if instr not in self.allowed_instructions: return False
+        self.instructions.append(instr)
+        return True
+
+
+    def tick(self) -> None:
+        # what are the instructions?
+        if len(self.instructions) > 0:
+            instr = self.instructions.pop(0)
+            self.snake_direction = instr
+        
+        # clear the tail... unless snake has just eaten in the previous move!
+        if self.snake_has_eaten:
+            self.snake_has_eaten = False 
+        else:
+            tail_x, tail_y = self.snake.pop(0)
+            self.board[tail_y][tail_x] = ' '
+        
         # knowing snake direction, move the head - down, left, right or up
-        
-        # clear the tail
-        tail_x, tail_y = self.snake.pop(0)
-        self.board[tail_y][tail_x] = ' '
-        
         # move the head
         head_x, head_y = self.snake[-1]
         match self.snake_direction:
             case 'd':
                 x = head_x
                 y = head_y + 1
+            case 'r':
+                x = head_x + 1
+                y = head_y
+            case 'u':
+                x = head_x
+                y = head_y - 1
+            case 'l':
+                x = head_x - 1
+                y = head_y
             case _:
                 raise RuntimeError('unknown direction')
 
         head = (x, y)
         try:
-            self.board[y][x] = 'x'
-            self.snake.append(head)
-            self.snake_head = head
+            what_is_ahead = self.board[y][x]
+            if what_is_ahead == self.eatable_item:
+                self.snake_has_eaten = True
+
+            if what_is_ahead == self.snake_body:
+                self.game_over = True
+                
+            if not self.game_over:
+                self.board[y][x] = self.snake_body
+                self.snake.append(head)
+                self.snake_head = head
         except IndexError:
             self.game_over = True
 
             
-    def place_item(self):
-        pass
+    def place_item(self, x: int = -1, y: int = -1):
+        # if x == -1 and y == -1:
+        #   apply random x, y = random.randint(0, len(self.board[0]) - 1), random.randint(0, len(self.board) - 1)
+        self.board[y][y] = self.eatable_item
