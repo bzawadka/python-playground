@@ -1,3 +1,4 @@
+import random
 
 class Game:
     default_board_width = 21
@@ -88,6 +89,15 @@ class Game:
 
             
     def place_item(self, x: int = -1, y: int = -1):
-        # if x == -1 and y == -1:
-        #   apply random x, y = random.randint(0, len(self.board[0]) - 1), random.randint(0, len(self.board) - 1)
-        self.board[y][y] = self.eatable_item
+        # choose randomly one of empty cells
+        if x == -1 or y == -1:
+            empty_cells = [(c, r) for r, row in enumerate(self.board)
+                                  for c, cell in enumerate(row) if cell == ' ']
+            if not empty_cells:
+                return    
+            x, y = random.choice(empty_cells)
+        
+        if self.board[y][x] == self.snake_body:
+            raise RuntimeError('item cannot be placed on non-empty cell')
+        
+        self.board[y][x] = self.eatable_item

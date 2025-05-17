@@ -1,4 +1,5 @@
 from snake import *
+import pytest
 
 def test_snake_init():
     g = Game(board_width=9, board_height=8)
@@ -14,6 +15,12 @@ def test_snake_init():
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
     assert g.snake_head == (4, 3)
     assert g.snake_direction == 'd'
+
+
+def test_item_cannot_be_placed_on_taken_cell():
+    g = Game(board_width=9, board_height=8)
+    with pytest.raises(RuntimeError, match='cannot be placed'):
+        g.place_item(4, 2)
 
 
 def test_snake_can_eat_and_grows():
