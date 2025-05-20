@@ -4,6 +4,7 @@ class Minesweeper:
     
     def __init__(self, board_size: int = default_board_size):
         self.board = [[' ' for _ in range(board_size)] for _ in range(board_size)]
+        self.visible_board = [['-' for _ in range(board_size)] for _ in range(board_size)]
         self.bombs = list()
         self.board_size = board_size
         self.game_over = False
@@ -16,10 +17,50 @@ class Minesweeper:
             self.board[y][x] = 'b'
 
 
-    def make_move(self, x: int, y: int) -> None:
+    def click(self, x: int, y: int) -> None:
+        if x < 0 or x > self.board_size - 1 or y < 0 or y > self.board_size - 1 : raise RuntimeError('wrong instruction: click outside of the board') 
+
+        # if bomb clicked
         if self.board[y][x] == 'b':
             self.game_over = True
-        # TODO make actual move which does not hit the bomb
+            return
+
+        # if number clicked
+        if self.board[y][x] != ' ':
+            self.reveal_at_visible_board((x, y))
+            return
+        
+        # empty cell clicked
+        points = [(x, y)]
+        visited = set()
+        while points:
+            p = points.pop()
+            self.reveal_at_visible_board(p)
+            visited.add(p)
+
+            neighbours = self.get_neighbours(p)
+            for n in neighbours:
+                if self.board_value_at(n) == ' ' and n not in visited:
+                    points.append(n)
+
+        revealed = set()
+        while visited:
+            v = visited.pop()
+            neighbours = self.get_neighbours(v)
+            for n in neighbours:
+                if self.board_value_at(n) != ' ' and n not in revealed and self.board_value_at(n):
+                    self.reveal_at_visible_board(n)
+                    revealed.add(n)
+
+
+    def board_value_at(self, point_coordinates: tuple[int, int]) -> str:
+        x, y = point_coordinates
+        return self.board[y][x]
+
+
+    def reveal_at_visible_board(self, point_coordinates: tuple[int, int]) -> None:
+        x, y = point_coordinates
+        self.visible_board[y][x] = self.board[y][x]
 
 
     def prepare_board(self) -> None:
@@ -44,7 +85,6 @@ class Minesweeper:
                 bomb_count = self.count_bombs_at(coordinates)
                 if bomb_count > 0:
                     self.board[y][x] = str(bomb_count)
-        
 
 
     def get_neighbours(self, point_coordinates: tuple[int, int]) -> list[tuple[int, int]]:

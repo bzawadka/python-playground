@@ -1,4 +1,5 @@
 from minesweeper import *
+import pytest
 
 
 def test_init_minesweeper():
@@ -36,7 +37,55 @@ def test_init_minesweeper():
 
 
 def test_click_game_interactions():
-    pass
+    m = Minesweeper()
+    m.plant_bombs([(1, 1), (3, 4), (2, 5), (4, 2), (3, 6)])
+    m.prepare_board()
+    assert m.board == [
+        ['1', '1', '1', ' ', ' ', ' ', ' '],
+        ['1', 'b', '1', '1', '1', '1', ' '],
+        ['1', '1', '1', '1', 'b', '1', ' '],
+        [' ', ' ', '1', '2', '2', '1', ' '],
+        [' ', '1', '2', 'b', '1', ' ', ' '],
+        [' ', '1', 'b', '3', '2', ' ', ' '],
+        [' ', '1', '2', 'b', '1', ' ', ' ']]
+    assert m.visible_board == [
+        ['-', '-', '-', '-', '-', '-', '-'],
+        ['-', '-', '-', '-', '-', '-', '-'],
+        ['-', '-', '-', '-', '-', '-', '-'],
+        ['-', '-', '-', '-', '-', '-', '-'],
+        ['-', '-', '-', '-', '-', '-', '-'],
+        ['-', '-', '-', '-', '-', '-', '-'],
+        ['-', '-', '-', '-', '-', '-', '-']]
+
+    m.click(2, 2)
+    assert m.visible_board == [
+        ['-', '-', '-', '-', '-', '-', '-'],
+        ['-', '-', '-', '-', '-', '-', '-'],
+        ['-', '-', '1', '-', '-', '-', '-'],
+        ['-', '-', '-', '-', '-', '-', '-'],
+        ['-', '-', '-', '-', '-', '-', '-'],
+        ['-', '-', '-', '-', '-', '-', '-'],
+        ['-', '-', '-', '-', '-', '-', '-']]
+    
+    m.click(6, 0)
+    assert m.visible_board == [
+        ['-', '-', '1', ' ', ' ', ' ', ' '],
+        ['-', '-', '1', '1', '1', '1', ' '],
+        ['-', '-', '1', '-', '-', '1', ' '],
+        ['-', '-', '-', '-', '2', '1', ' '],
+        ['-', '-', '-', '-', '1', ' ', ' '],
+        ['-', '-', '-', '-', '2', ' ', ' '],
+        ['-', '-', '-', '-', '1', ' ', ' ']]
+
+    m.click(0, 5)
+    assert m.visible_board == [
+        ['-', '-', '1', ' ', ' ', ' ', ' '],
+        ['-', '-', '1', '1', '1', '1', ' '],
+        ['1', '1', '1', '-', '-', '1', ' '],
+        [' ', ' ', '1', '-', '2', '1', ' '],
+        [' ', '1', '2', '-', '1', ' ', ' '],
+        [' ', '1', '-', '-', '2', ' ', ' '],
+        [' ', '1', '-', '-', '1', ' ', ' ']]
 
 
 def test_click_on_bomb_game_over():
@@ -44,8 +93,20 @@ def test_click_on_bomb_game_over():
     m.plant_bombs([(1, 1), (3, 4), (2, 5), (4, 2), (3, 6)])
     m.prepare_board()
     m.game_over is False
-    m.make_move(4, 2)
+    m.click(4, 2)
     m.game_over is True
+
+
+def test_cannot_click_outside_of_board():
+    m = Minesweeper()
+    with pytest.raises(RuntimeError, match='wrong instruction'):
+        m.click(100, 44)
+
+    with pytest.raises(RuntimeError, match='wrong instruction'):
+        m.click(-1, 4)
+
+    with pytest.raises(RuntimeError, match='wrong instruction'):
+        m.click(1, 7)
 
 
 if __name__ == "__main__":
