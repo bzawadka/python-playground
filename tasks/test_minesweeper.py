@@ -34,6 +34,9 @@ def test_init_minesweeper():
         [' ', '1', '2', 'b', '1', ' ', ' '],
         [' ', '1', 'b', '3', '2', ' ', ' '],
         [' ', '1', '2', 'b', '1', ' ', ' ']]
+    
+    m.is_game_won_v1 is False
+    m.is_game_won_v2 is False
 
 
 def test_click_game_interactions():
@@ -88,6 +91,64 @@ def test_click_game_interactions():
         [' ', '1', '-', '-', '1', ' ', ' ']]
 
 
+def test_mark_bomb_and_win_the_game():
+    m = Minesweeper()
+    m.plant_bombs([(1, 1), (3, 4), (2, 5), (4, 2), (3, 6)])
+    m.prepare_board()
+    assert m.board == [
+        ['1', '1', '1', ' ', ' ', ' ', ' '],
+        ['1', 'b', '1', '1', '1', '1', ' '],
+        ['1', '1', '1', '1', 'b', '1', ' '],
+        [' ', ' ', '1', '2', '2', '1', ' '],
+        [' ', '1', '2', 'b', '1', ' ', ' '],
+        [' ', '1', 'b', '3', '2', ' ', ' '],
+        [' ', '1', '2', 'b', '1', ' ', ' ']]
+
+    m.click(2, 2)
+    m.click(6, 0)
+    m.click(0, 5)
+    assert m.visible_board == [
+        ['-', '-', '1', ' ', ' ', ' ', ' '],
+        ['-', '-', '1', '1', '1', '1', ' '],
+        ['1', '1', '1', '-', '-', '1', ' '],
+        [' ', ' ', '1', '-', '2', '1', ' '],
+        [' ', '1', '2', '-', '1', ' ', ' '],
+        [' ', '1', '-', '-', '2', ' ', ' '],
+        [' ', '1', '-', '-', '1', ' ', ' ']]
+    
+    m.mark_bomb(4, 2)
+    m.mark_bomb(1, 1)
+    assert m.visible_board == [
+        ['-', '-', '1', ' ', ' ', ' ', ' '],
+        ['-', 'f', '1', '1', '1', '1', ' '],
+        ['1', '1', '1', '-', 'f', '1', ' '],
+        [' ', ' ', '1', '-', '2', '1', ' '],
+        [' ', '1', '2', '-', '1', ' ', ' '],
+        [' ', '1', '-', '-', '2', ' ', ' '],
+        [' ', '1', '-', '-', '1', ' ', ' ']]
+    m.click(0, 0)
+    m.click(1, 0)
+    m.click(0, 1)
+    m.click(3, 2)
+    m.click(3, 3)
+    m.mark_bomb(3, 4)
+    m.click(3, 5)
+    m.mark_bomb(3, 6)
+    m.mark_bomb(2, 5)
+    m.click(2, 6)
+    assert m.visible_board == [
+        ['1', '1', '1', ' ', ' ', ' ', ' '],
+        ['1', 'f', '1', '1', '1', '1', ' '],
+        ['1', '1', '1', '1', 'f', '1', ' '],
+        [' ', ' ', '1', '2', '2', '1', ' '],
+        [' ', '1', '2', 'f', '1', ' ', ' '],
+        [' ', '1', 'f', '3', '2', ' ', ' '],
+        [' ', '1', '2', 'f', '1', ' ', ' ']]
+    
+    assert m.is_game_won_v1() is True
+    assert m.is_game_won_v2() is True
+
+
 def test_click_on_bomb_game_over():
     m = Minesweeper()
     m.plant_bombs([(1, 1), (3, 4), (2, 5), (4, 2), (3, 6)])
@@ -95,6 +156,8 @@ def test_click_on_bomb_game_over():
     m.game_over is False
     m.click(4, 2)
     m.game_over is True
+    assert m.is_game_won_v1() is False
+    assert m.is_game_won_v2() is False
 
 
 def test_cannot_click_outside_of_board():

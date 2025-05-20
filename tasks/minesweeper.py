@@ -57,6 +57,60 @@ class Minesweeper:
         return True
 
 
+    def mark_bomb(self, x: int, y: int) -> None:
+        self.visible_board[y][x] = 'f'
+
+
+    def is_game_won_v1(self) -> bool:
+        if self.game_over: return False
+
+        # all cells must be populated
+        unfinished_cells = [(x, y) for y in range(self.board_size)
+                                   for x in range(self.board_size)
+                                   if self.visible_board[y][x] == '-']
+        if unfinished_cells:
+            return False
+
+        # all cells must be populated - another way 
+        all_cells_set = all(
+            self.visible_board[y][x] == ' '
+            or self.visible_board[y][x] == 'f' 
+            or self.visible_board[y][x] in {str(i) for i in range(1, 9)}
+            for y in range(self.board_size)
+            for x in range(self.board_size)
+        )
+        if not all_cells_set:
+            return False
+
+        # if all bombs are marked   
+        all_bombs_marked = all(
+            self.visible_board[y][x] == 'f' 
+            for (x, y) in self.bombs
+        )
+
+        return True if all_bombs_marked else False
+
+
+    def is_game_won_v2(self) -> bool:
+        if self.game_over:
+            return False
+
+        # All non-bomb cells must be revealed (should not hold value: '-')
+        for y in range(self.board_size):
+            for x in range(self.board_size):
+                if (x, y) not in self.bombs and self.visible_board[y][x] == '-':
+                    return False
+
+        # All bombs must be flagged, and only bombs are flagged
+        for y in range(self.board_size):
+            for x in range(self.board_size):
+                if self.visible_board[y][x] == 'f':
+                    if (x, y) not in self.bombs:
+                        return False
+
+        return True
+
+
     def board_value_at(self, point_coordinates: tuple[int, int]) -> str:
         x, y = point_coordinates
         return self.board[y][x]
