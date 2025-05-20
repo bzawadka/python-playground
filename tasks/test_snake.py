@@ -17,6 +17,58 @@ def test_snake_init():
     assert g.snake_direction == 'd'
 
 
+def test_snake_take_instructions():
+    g = Game(board_width=9, board_height=8)
+    g.tick()
+    g.instruct('r')
+    g.tick()
+    assert g.board == [
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', 'x', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', 'x', 'x', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
+    g.tick()
+    assert g.board == [
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', 'x', 'x', 'x', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]    
+
+
+def test_snake_ignore_invalid_instructions():
+    g = Game(board_width=9, board_height=8)
+    instr_valid = g.instruct('v')
+    assert instr_valid is False
+    instr_valid = g.instruct('r')
+    assert instr_valid is True
+
+
+def test_snake_takes_multiple_instructions():
+    g = Game(board_width=9, board_height=8)
+    g.tick()
+    g.instruct('r')
+    g.instruct('u')
+    g.tick()
+    g.tick()
+    assert g.board == [
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', 'x', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', 'x', 'x', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
+
+
 def test_item_cannot_be_placed_on_taken_cell():
     g = Game(board_width=9, board_height=8)
     with pytest.raises(RuntimeError, match='cannot be placed'):
@@ -81,58 +133,6 @@ def test_snake_can_eat_and_grows():
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
     
-
-def test_snake_ignore_invalid_instructions():
-    g = Game(board_width=9, board_height=8)
-    instr_valid = g.instruct('v')
-    assert instr_valid is False
-    instr_valid = g.instruct('r')
-    assert instr_valid is True
-
-
-def test_snake_take_instructions():
-    g = Game(board_width=9, board_height=8)
-    g.tick()
-    g.instruct('r')
-    g.tick()
-    assert g.board == [
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', 'x', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', 'x', 'x', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
-    g.tick()
-    assert g.board == [
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', 'x', 'x', 'x', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]    
-
-
-def test_snake_takes_multiple_instructions():
-    g = Game(board_width=9, board_height=8)
-    g.tick()
-    g.instruct('r')
-    g.instruct('u')
-    g.tick()
-    g.tick()
-    assert g.board == [
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', 'x', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', 'x', 'x', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
-
 
 def test_game_over_when_hit_yorself():
     g = Game(board_width=9, board_height=8, snake_length=5)
