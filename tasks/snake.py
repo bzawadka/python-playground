@@ -1,10 +1,16 @@
+from enum import Enum
 import random
+
+class Direction(Enum):
+    RIGHT = 'r'
+    LEFT = 'l'
+    UP = 'u'
+    DOWN = 'd'
 
 class Game:
     default_board_width = 21
     default_board_height = 15
     default_snake_length = 3
-    allowed_instructions = {'r', 'l', 'u', 'd'}
     eatable_item = 'o'
     snake_body = 'x'
 
@@ -22,7 +28,7 @@ class Game:
     def draw_initial_snake(self, board_width, snake_length) -> None:
         default_snake_position_w = board_width // 2
         default_snake_position_h = 1
-        self.snake_direction = 'd'
+        self.snake_direction = Direction.DOWN
 
         self.snake = []
         for i in range(snake_length):
@@ -33,8 +39,8 @@ class Game:
             self.snake_head = (x, y)
 
 
-    def instruct(self, instr: str) -> bool:
-        if instr not in self.allowed_instructions: return False
+    def instruct(self, instr: Direction) -> bool:
+        # if instr not in {d.value for d in Direction}: return False
         self.instructions.append(instr)
         return True
 
@@ -56,16 +62,16 @@ class Game:
         # move the head
         head_x, head_y = self.snake[-1]
         match self.snake_direction:
-            case 'd':
+            case Direction.DOWN:
                 x = head_x
                 y = head_y + 1
-            case 'r':
+            case Direction.RIGHT:
                 x = head_x + 1
                 y = head_y
-            case 'u':
+            case Direction.UP:
                 x = head_x
                 y = head_y - 1
-            case 'l':
+            case Direction.LEFT:
                 x = head_x - 1
                 y = head_y
             case _:

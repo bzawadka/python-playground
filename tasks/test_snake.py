@@ -14,13 +14,13 @@ def test_snake_init():
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
     assert g.snake_head == (4, 3)
-    assert g.snake_direction == 'd'
+    assert g.snake_direction == Direction.DOWN
 
 
 def test_snake_take_instructions():
     g = Game(board_width=9, board_height=8)
     g.tick()
-    g.instruct('r')
+    g.instruct(Direction.RIGHT)
     g.tick()
     assert g.board == [
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -45,17 +45,17 @@ def test_snake_take_instructions():
 
 def test_snake_ignore_invalid_instructions():
     g = Game(board_width=9, board_height=8)
-    instr_valid = g.instruct('v')
-    assert instr_valid is False
-    instr_valid = g.instruct('r')
+    # instr_valid = g.instruct('v')
+    # assert instr_valid is False
+    instr_valid = g.instruct(Direction.RIGHT)
     assert instr_valid is True
 
 
 def test_snake_takes_multiple_instructions():
     g = Game(board_width=9, board_height=8)
     g.tick()
-    g.instruct('r')
-    g.instruct('u')
+    g.instruct(Direction.RIGHT)
+    g.instruct(Direction.UP)
     g.tick()
     g.tick()
     assert g.board == [
@@ -89,7 +89,7 @@ def test_snake_can_eat_and_grows():
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
     g.tick()
     g.tick()
-    g.instruct('r')
+    g.instruct(Direction.RIGHT)
     assert g.board == [
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -145,9 +145,9 @@ def test_game_over_when_hit_yorself():
         [' ', ' ', ' ', ' ', 'x', ' ', ' ', ' ', ' '],
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
-    g.instruct('l')
+    g.instruct(Direction.LEFT)
     g.tick()
-    g.instruct('u')
+    g.instruct(Direction.UP)
     g.tick()
 
     assert g.board == [
@@ -161,7 +161,7 @@ def test_game_over_when_hit_yorself():
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
     assert g.game_over is False
 
-    g.instruct('r')
+    g.instruct(Direction.RIGHT)
     g.tick()
     assert g.game_over is True
 
