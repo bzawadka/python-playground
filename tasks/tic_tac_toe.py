@@ -14,16 +14,13 @@ class TicTacToe:
         print('-' * 5)
 
     def is_draw(self) -> bool:
-        if self.check_winner('X'):
-            self.winner = 'X'
-        elif self.check_winner('O'):
-            self.winner = 'O'
-
+        if self.check_winner('X'): self.winner = 'X'
+        elif self.check_winner('O'): self.winner = 'O'
         return self.is_board_full() and self.winner is None
     
     def is_board_full(self):
-        return all(cell != ' ' for row in self.board for cell in row)
-    
+        return all(cell != ' ' for row in self.board for cell in row)    
+
     def make_move(self, player: str, row: int, col: int) -> bool:
         if row < 0 or row >= self.board_size or col < 0 or col >= self.board_size:
             return False

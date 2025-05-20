@@ -122,14 +122,6 @@ class Minesweeper:
 
 
     def prepare_board(self) -> None:
-        # for each bomb
-        #   get coordinates of every neighbour
-        #       for each neighbour
-        #           if it's count is not yet set
-        #               get coordinates of every neighbour
-        #               count how many of them are bombs
-        #               enter the count in current cell
-        
         for bomb in self.bombs:
             print('processing' + str(bomb))
             neighbours = self.get_neighbours(bomb)
@@ -161,10 +153,9 @@ class Minesweeper:
         return neighbours
 
 
-    def count_bombs_at(self, coordinates: list) -> int:
+    def count_bombs_at(self, coordinates: list[tuple[int, int]]) -> int:
         bomb_count = 0
-        for c in coordinates:
-            x, y = c
+        for x, y in coordinates:
             if self.board[y][x] == 'b':
                 bomb_count += 1
         return bomb_count
