@@ -17,18 +17,20 @@ class Minesweeper:
             self.board[y][x] = 'b'
 
 
-    def click(self, x: int, y: int) -> None:
+    def click(self, x: int, y: int) -> bool:
+        if self.game_over: return False
         if x < 0 or x > self.board_size - 1 or y < 0 or y > self.board_size - 1 : raise RuntimeError('wrong instruction: click outside of the board') 
 
         # if bomb clicked
         if self.board[y][x] == 'b':
             self.game_over = True
-            return
+            self.reveal_at_visible_board((x, y))
+            return True
 
         # if number clicked
         if self.board[y][x] != ' ':
             self.reveal_at_visible_board((x, y))
-            return
+            return True
         
         # empty cell clicked
         points = [(x, y)]
@@ -48,9 +50,11 @@ class Minesweeper:
             v = visited.pop()
             neighbours = self.get_neighbours(v)
             for n in neighbours:
-                if self.board_value_at(n) != ' ' and n not in revealed and self.board_value_at(n):
+                if self.board_value_at(n) != ' ' and n not in revealed:
                     self.reveal_at_visible_board(n)
                     revealed.add(n)
+                    
+        return True
 
 
     def board_value_at(self, point_coordinates: tuple[int, int]) -> str:
