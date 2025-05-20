@@ -38,15 +38,17 @@ class TicTacToe:
         return False
     
     def check_winner(self, player: str) -> bool:
+        size = self.board_size
+
         # Check rows and columns
-        for i in range(self.board_size):
-            if all(self.board[i][j] == player for j in range(self.board_size)) or \
-               all(self.board[j][i] == player for j in range(self.board_size)):
+        for i in range(size):
+            if all(self.board[i][j] == player for j in range(size)) or \
+               all(self.board[j][i] == player for j in range(size)):
                 return True
 
         # Check diagonals
-        if all(self.board[i][i] == player for i in range(self.board_size)) or \
-           all(self.board[i][self.board_size - i - 1] == player for i in range(self.board_size)):
+        if all(self.board[i][i] == player for i in range(size)) or \
+           all(self.board[i][size - i - 1] == player for i in range(size)):
             return True
 
         return False

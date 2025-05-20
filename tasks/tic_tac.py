@@ -8,9 +8,9 @@ class TicTacToe:
     
 
     def make_move(self, player: str, x: int, y: int) -> bool:
-        if player not in set(['X', 'O']): return False
+        if player not in {'X', 'O'}: return False
 
-        if self.board[x][y] in set(['X', 'O']): return False
+        if self.board[x][y] in {'X', 'O'}: return False
 
         self.board[x][y] = player
 
@@ -26,7 +26,7 @@ class TicTacToe:
         self.check_for_winner('O')
 
 
-    def check_for_winner(self, player: str):
+    def check_for_winner(self, player: str) -> None:
         size = self.board_size
 
         # check rows and columns
