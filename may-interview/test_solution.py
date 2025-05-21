@@ -1,0 +1,92 @@
+from solution import *
+import pytest
+
+
+def test_init_solution():
+    s = Solution()
+    assert s.board == [
+        [' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ']]
+
+    s.init_board([(0, 0), (0, 2), (1, 1), (1, 3),
+                 (2, 0), (2, 2), (3, 1), (3, 3)])
+    assert s.board == [
+        ['2', ' ', '2', ' '],
+        [' ', '2', ' ', '2'],
+        ['2', ' ', '2', ' '],
+        [' ', '2', ' ', '2']]
+
+
+def test_reject_unknown_instructrion():
+    s = Solution()
+    s.make_move('l')
+
+    with pytest.raises(RuntimeError):
+        s.make_move('v')
+
+
+def test_move_left_adds_numbers():
+    s = Solution()
+    s.init_board([(0, 0), (0, 2), (1, 1), (1, 3),
+                 (2, 0), (2, 2), (3, 1), (3, 3)])
+    s.make_move('l')
+    assert s.board == [
+        ['4', ' ', ' ', ' '],
+        ['4', ' ', ' ', ' '],
+        ['4', ' ', ' ', ' '],
+        ['4', ' ', ' ', ' ']]
+
+
+def test_move_left_on_empty_board():
+    s = Solution()
+    assert s.board == [
+        [' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ']]
+
+    s.make_move('l')
+    assert s.board == [
+        [' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ']]
+
+
+def test_move_left_all_filled():
+    s = Solution()
+    s.board = [
+        ['2', '2', '2', '2'],
+        ['2', '2', '2', '2'],
+        ['2', '2', '2', '2'],
+        ['2', '2', '2', '2']]
+
+    s.make_move('l')
+    assert s.board == [
+        ['4', '4', ' ', ' '],
+        ['4', '4', ' ', ' '],
+        ['4', '4', ' ', ' '],
+        ['4', '4', ' ', ' ']]
+
+
+def test_move_left_not_all_added():
+    s = Solution()
+    s.board = [
+        ['4', '2', '2', ' '],
+        ['2', '2', '2', '2'],
+        ['2', '2', '2', '2'],
+        ['2', '2', '2', '2']]
+
+    s.make_move('l')
+    assert s.board == [
+        ['4', '4', ' ', ' '],
+        ['4', '4', ' ', ' '],
+        ['4', '4', ' ', ' '],
+        ['4', '4', ' ', ' ']]
+
+
+if __name__ == "__main__":
+    test_init_solution()
+    print("All tests passed.")
