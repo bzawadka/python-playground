@@ -151,7 +151,7 @@ def test_requirement_3_merge_right():
         [' ', ' ', ' ', 2]]
 
 
-def test_requirement_3_merge_up():
+def test_requirement_4_merge_up():
     s = Solution()
     s.board = [
         [' ', 8  , 2  , 2  ],
@@ -167,7 +167,7 @@ def test_requirement_3_merge_up():
         [' ', ' ', ' ', ' ']]
 
 
-def test_requirement_3_merge_down():
+def test_requirement_4_merge_down():
     s = Solution()
     s.board = [
         [' ', 8  , 2  , 2  ],
@@ -183,7 +183,29 @@ def test_requirement_3_merge_down():
         [4  , 2  , 2  , 4]]
 
 
+def test_requirement_5_generate_new_item():
+    s = Solution()
+    s.board = [
+        [' ', 8  , 2  , 2  ],
+        [4  , 2  , ' ', 2  ],
+        [' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', 2  ]]
+
+    s.make_move(Direction.UP, generate_new_item=True)
+
+    # first row should be unchanged, because the first row is not empty
+    assert s.board[0] == [4  , 8  , 2  , 4  ]
+
+    # remaining rows should contain two original cells with 2, and one new - generated
+    remainder = s.board[1:]
+    cells_with_2 = [(x, y) for y, row in enumerate(remainder)
+                           for x, cell in enumerate(row)
+                           if cell == 2]
+
+    assert len(cells_with_2) == 3
+
+    
 
 if __name__ == "__main__":
-    test_requirement_3_merge_up()
+    test_init_solution()
     print("All tests passed.")

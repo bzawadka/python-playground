@@ -15,7 +15,7 @@ class Solution:
         self.board = [[' ' for _ in range(self.board_size)] for _ in range(self.board_size)]
 
 
-    def make_move(self, instr: Direction) -> None:
+    def make_move(self, instr: Direction, generate_new_item: bool = False) -> None:
         match instr:
             case Direction.RIGHT | Direction.DOWN:
                 match instr:
@@ -72,6 +72,16 @@ class Solution:
 
             case _:
                 raise RuntimeError('unknown instruction')
+
+
+        if generate_new_item:
+            empty_cells = [(x, y) for y, row in enumerate(self.board)
+                                  for x, cell in enumerate(row)
+                                  if cell == ' ']
+            if empty_cells:
+                x, y = random.choice(empty_cells)
+                self.board[y][x] = 2
+            
         
 
     def remove_empty_cells(self, board: list[list]) -> list[list]:
@@ -112,5 +122,3 @@ class Solution:
         # explicit assignment
         for x, y in items:
             self.board[y][x] = 2
-
-    
