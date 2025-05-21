@@ -10,11 +10,8 @@ class Solution:
 
     def remove_empty_cells(self, my_board: list[list]) -> list[list]:
         temp_board = [] 
-        for y, row in enumerate(my_board):
-            temp_board.append([])
-            for cell in row:
-                if cell != ' ':
-                    temp_board[y].append(cell)
+        for row in my_board:
+            temp_board.append([c for c in row if c != ' '])
         return temp_board
 
 
@@ -31,37 +28,19 @@ class Solution:
                 pass
             case 'l':
                 temp_board = self.remove_empty_cells(self.board)
-
                 for row in temp_board:
-                    if len(row) >= 2:
-                        first_value = int(row[0])
-                        second_value = int(row[1])
-                        if second_value == first_value:
-                            row[0] = str(first_value + second_value)
-                            row[1] = ' '
-
-                    if len(row) >= 3:
-                        second_value = int(row[1]) if row[1] != ' ' else -1
-                        third_value = int(row[2]) if row[2] != ' ' else -1
-
-                        if second_value == third_value:
-                            if len(row) >= 3:
-                                row[1] = str(second_value + third_value)
-                                row[2] = ' '
-
-                    if len(row) >= 4:
-                        third_value = int(row[2]) if row[2] != ' ' else -1
-                        fourth_value = int(row[3]) if row[3] != ' ' else -1
-
-                        if third_value == fourth_value:
-                            if len(row) >= 4:
-                                row[2] = str(third_value + fourth_value)
-                                row[3] = ' '
+                    i = 0
+                    while i < len(row) - 1:
+                        # if adjacent numbers are equal - add value in the left
+                        if row[i] == row[i + 1]:
+                            first_value = int(row[i])
+                            second_value = int(row[i + 1])
+                            row[i] = str(first_value + second_value)
+                            row[i + 1] = ' '
+                            i += 1 # skip merged cell    
+                        i += 1
 
                 temp_board = self.remove_empty_cells(temp_board)
-
-                # use temp_board
-                # keep appeding empty elements until I have 4 in a row
                 for row in temp_board:
                     while len(row) < self.board_size:
                         row.append(' ')
@@ -82,8 +61,9 @@ class Solution:
             
             for i in range(self.default_no_of_items):
                 item = random.choice(empty_cells)
-                y, x = item
+                x, y = item
                 self.board[y][x] = '2'
+                empty_cells.remove(item)
 
 
         for x, y in items:
