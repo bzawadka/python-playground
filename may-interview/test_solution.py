@@ -227,10 +227,10 @@ def test_requirement_6_game_state_won():
 def test_requirement_6_game_state_lost():
     s = Solution()
     s.board = [
-        [2,4,2,4],
-        [4,2,4,2],
-        [2,4,2,4],
-        [4,2,4,2]]
+        [2, 4, 2, 4],
+        [4, 2, 4, 2],
+        [2, 4, 2, 4],
+        [4, 2, 4, 2]]
 
     state = s.make_move(Direction.LEFT)
     assert state == GameState.LOST

@@ -28,53 +28,46 @@ class Solution:
                     case Direction.RIGHT:
                         temp_board = self.remove_empty_cells(self.board)
                     case Direction.DOWN:
+                        # transpose the board to work with columns as rows; then repat the logic for moving right
                         transposed = self.transpose(self.board)
                         temp_board = self.remove_empty_cells(transposed)
 
                 for row in temp_board:
-                    i = len(row) - 1
+                    i = len(row) - 1    # starting from the right
                     while i > 0:
-                        # compare pairs from the right; if adjacent numbers are equal - add values in the right cell
+                        # compare pairs; if adjacent numbers are equal - add values in the right cell
                         if row[i] == row[i - 1]:
-                            row[i] = int(row[i]) + int(row[i - 1])
+                            row[i] = row[i] + row[i - 1]
                             row[i - 1] = ' '
-                            i -= 1 # skip added cell    
+                            i -= 1 # skip merged cell    
                         i -= 1
 
                 temp_board = self.remove_empty_cells(temp_board)
                 temp_board = self.prepend_empty_cells(temp_board)
-                match instr:
-                    case Direction.RIGHT:
-                        self.board = temp_board
-                    case Direction.DOWN:
-                        self.board = self.transpose(temp_board)
+                self.board = temp_board if instr == Direction.RIGHT else self.transpose(temp_board)
 
             case Direction.LEFT | Direction.UP:
                 match instr:
                     case Direction.LEFT:
                         temp_board = self.remove_empty_cells(self.board)
                     case Direction.UP:
-                        # Transpose the board to work with columns as rows; then repat the logic for moving left
+                        # transpose the board to work with columns as rows; then repat the logic for moving left
                         transposed = self.transpose(self.board)
                         temp_board = self.remove_empty_cells(transposed)
 
                 for row in temp_board:
-                    i = 0
+                    i = 0   # starting from the left
                     while i < len(row) - 1:
-                        # compare pairs from the left; if adjacent numbers are equal - add values in the left cell
+                        # compare pairs; if adjacent numbers are equal - add values in the left cell
                         if row[i] == row[i + 1]:
-                            row[i] = int(row[i]) + int(row[i + 1])
+                            row[i] = row[i] + row[i + 1]
                             row[i + 1] = ' '
-                            i += 1  # skip added cell
+                            i += 1  # skip merged cell
                         i += 1
 
                 temp_board = self.remove_empty_cells(temp_board)
                 temp_board = self.append_empty_cells(temp_board)
-                match instr:
-                    case Direction.LEFT:
-                        self.board = temp_board
-                    case Direction.UP:
-                        self.board = self.transpose(temp_board)
+                self.board = temp_board if instr == Direction.LEFT else self.transpose(temp_board)
 
             case _:
                 raise RuntimeError('unknown instruction')
@@ -96,8 +89,8 @@ class Solution:
 
     def generate_new_random_item_on_the_board(self):
         empty_cells = [(x, y) for y, row in enumerate(self.board)
-                                for x, cell in enumerate(row)
-                                if cell == ' ']
+                              for x, cell in enumerate(row)
+                              if cell == ' ']
         if empty_cells:
             x, y = random.choice(empty_cells)
             self.board[y][x] = self.default_item_value
