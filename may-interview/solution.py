@@ -17,11 +17,14 @@ class Solution:
 
     def make_move(self, instr: Direction) -> None:
         match instr:
-            case Direction.DOWN:
-                pass
+            case Direction.RIGHT | Direction.DOWN:
+                match instr:
+                    case Direction.RIGHT:
+                        temp_board = self.remove_empty_cells(self.board)
+                    case Direction.DOWN:
+                        transposed = self.transpose(self.board)
+                        temp_board = self.remove_empty_cells(transposed)
 
-            case Direction.RIGHT:
-                temp_board = self.remove_empty_cells(self.board)
                 for row in temp_board:
                     i = len(row) - 1
                     while i > 0:
@@ -34,7 +37,11 @@ class Solution:
 
                 temp_board = self.remove_empty_cells(temp_board)
                 temp_board = self.prepend_empty_cells(temp_board)
-                self.board = temp_board
+                match instr:
+                    case Direction.RIGHT:
+                        self.board = temp_board
+                    case Direction.DOWN:
+                        self.board = self.transpose(temp_board)
 
             case Direction.LEFT | Direction.UP:
                 match instr:
@@ -42,7 +49,7 @@ class Solution:
                         temp_board = self.remove_empty_cells(self.board)
                     case Direction.UP:
                         # Transpose the board to work with columns as rows; then repat the logic for moving left
-                        transposed = [[self.board[y][x] for y in range(self.board_size)] for x in range(self.board_size)]
+                        transposed = self.transpose(self.board)
                         temp_board = self.remove_empty_cells(transposed)
 
                 for row in temp_board:
@@ -61,10 +68,7 @@ class Solution:
                     case Direction.LEFT:
                         self.board = temp_board
                     case Direction.UP:
-                        # write columns back to board
-                        for x in range(self.board_size):
-                            for y in range(self.board_size):
-                                self.board[y][x] = temp_board[x][y]              
+                        self.board = self.transpose(temp_board)
 
             case _:
                 raise RuntimeError('unknown instruction')
@@ -86,6 +90,10 @@ class Solution:
             while len(row) < self.board_size:
                 row.insert(0, ' ')
         return board
+
+
+    def transpose(self, board: list[list]) -> list[list]:
+        return [[board[y][x] for y in range(self.board_size)] for x in range(self.board_size)]
 
 
     def init_board(self, items: list[tuple[int,int]]) -> None:

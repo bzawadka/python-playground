@@ -167,6 +167,22 @@ def test_requirement_3_merge_up():
         [' ', ' ', ' ', ' ']]
 
 
+def test_requirement_3_merge_down():
+    s = Solution()
+    s.board = [
+        [' ', 8  , 2  , 2  ],
+        [4  , 2  , ' ', 2  ],
+        [' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', 2  ]]
+
+    s.make_move(Direction.DOWN)
+    assert s.board == [
+        [' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' '],
+        [' ', 8  , ' ', 2],
+        [4  , 2  , 2  , 4]]
+
+
 
 if __name__ == "__main__":
     test_requirement_3_merge_up()
