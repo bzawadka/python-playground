@@ -16,26 +16,39 @@ class Solution:
 
 
     def make_move(self, inst: str) -> None:
+        temp_board = self.remove_empty_cells(self.board)
         match inst:
+            # move right
             case 'r':
-                # move right
-                pass
+                for row in temp_board:
+                    i = len(row) - 1
+                    while i >= 0:
+                        # if adjacent numbers are equal - add value in the right
+                        if row[i] == row[i - 1]:
+                            row[i] = str(int(row[i]) + int(row[i - 1]))
+                            row[i - 1] = ' '
+                            i -= 1 # skip merged cell    
+                        i -= 1
+
+                temp_board = self.remove_empty_cells(temp_board)
+                for row in temp_board:
+                    while len(row) < self.board_size:
+                        row.insert(0, ' ')
+
+            # move up
             case 'u':
-                # move up
                 pass
+            # move down
             case 'd':
-                # move down
                 pass
+            # move left
             case 'l':
-                temp_board = self.remove_empty_cells(self.board)
                 for row in temp_board:
                     i = 0
                     while i < len(row) - 1:
                         # if adjacent numbers are equal - add value in the left
                         if row[i] == row[i + 1]:
-                            first_value = int(row[i])
-                            second_value = int(row[i + 1])
-                            row[i] = str(first_value + second_value)
+                            row[i] = str(int(row[i]) + int(row[i + 1]))
                             row[i + 1] = ' '
                             i += 1 # skip merged cell    
                         i += 1
@@ -45,27 +58,29 @@ class Solution:
                     while len(row) < self.board_size:
                         row.append(' ')
 
-                self.board = temp_board
-
             case _:
                 raise RuntimeError('unknown instruction')
+
+
+        self.board = temp_board
 
         # return temp_board
 
 
     def init_board(self, items: list[tuple[int,int]]) -> None:
+        # random assignment
         if not items:
             empty_cells = [(x, y) for y, row in enumerate(self.board)
                                   for x, cell in enumerate(row)
                                   if cell == ' ']
-            
-            for i in range(self.default_no_of_items):
+
+            for _ in range(self.default_no_of_items):
                 item = random.choice(empty_cells)
                 x, y = item
                 self.board[y][x] = '2'
                 empty_cells.remove(item)
 
-
+        # explicit assignment
         for x, y in items:
             self.board[y][x] = '2'
 
