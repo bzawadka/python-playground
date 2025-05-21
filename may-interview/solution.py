@@ -25,7 +25,7 @@ class Solution:
                     while i >= 0:
                         # if adjacent numbers are equal - add value in the right
                         if row[i] == row[i - 1]:
-                            row[i] = str(int(row[i]) + int(row[i - 1]))
+                            row[i] = row[i] + row[i - 1]
                             row[i - 1] = ' '
                             i -= 1 # skip merged cell    
                         i -= 1
@@ -48,7 +48,7 @@ class Solution:
                     while i < len(row) - 1:
                         # if adjacent numbers are equal - add value in the left
                         if row[i] == row[i + 1]:
-                            row[i] = str(int(row[i]) + int(row[i + 1]))
+                            row[i] = row[i] + row[i + 1]
                             row[i + 1] = ' '
                             i += 1 # skip merged cell    
                         i += 1
@@ -77,11 +77,11 @@ class Solution:
             for _ in range(self.default_no_of_items):
                 item = random.choice(empty_cells)
                 x, y = item
-                self.board[y][x] = '2'
+                self.board[y][x] = 2
                 empty_cells.remove(item)
 
         # explicit assignment
         for x, y in items:
-            self.board[y][x] = '2'
+            self.board[y][x] = 2
 
     
