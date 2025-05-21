@@ -29,7 +29,7 @@ def test_reject_unknown_instructrion():
 def test_move_left_adds_numbers():
     s = Solution()
     s.init_board([(0, 0), (0, 2), (1, 1), (1, 3), (2, 0), (2, 2), (3, 1), (3, 3)])
-    s.make_move(Direction.LEFT)
+    state = s.make_move(Direction.LEFT)
     assert s.board == [
         [4, ' ', ' ', ' '],
         [4, ' ', ' ', ' '],
@@ -193,16 +193,47 @@ def test_requirement_5_generate_new_item():
 
     s.make_move(Direction.UP, generate_new_item=True)
 
-    # first row should be unchanged, because the first row is not empty
+    # after the move, first row is always populated
     assert s.board[0] == [4  , 8  , 2  , 4  ]
 
-    # remaining rows should contain two original cells with 2, and one new - generated
+    # remaining rows should contain two original cells with number 2, and one new - generated
     remainder = s.board[1:]
     cells_with_2 = [(x, y) for y, row in enumerate(remainder)
                            for x, cell in enumerate(row)
                            if cell == 2]
 
     assert len(cells_with_2) == 3
+
+
+def test_requirement_6_game_state_playing():
+    s = Solution()
+    s.init_board([(0, 0), (0, 2), (1, 1), (1, 3), (2, 0), (2, 2), (3, 1), (3, 3)])
+    state = s.make_move(Direction.LEFT)
+    assert state == GameState.PLAYING
+
+
+def test_requirement_6_game_state_won():
+    s = Solution()
+    s.board = [
+        [4, ' ', ' ', 2],
+        [1024, ' ', ' ', 1024],
+        [4, 2, ' ', ' '],
+        [4, ' ', ' ', ' ']]
+
+    state = s.make_move(Direction.LEFT)
+    assert state == GameState.WON
+
+
+def test_requirement_6_game_state_lost():
+    s = Solution()
+    s.board = [
+        [2,4,2,4],
+        [4,2,4,2],
+        [2,4,2,4],
+        [4,2,4,2]]
+
+    state = s.make_move(Direction.LEFT)
+    assert state == GameState.LOST
 
     
 
