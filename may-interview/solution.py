@@ -1,4 +1,11 @@
 import random
+from enum import Enum
+
+class Direction(Enum):
+    UP = 'u'
+    DOWN = 'd'
+    LEFT = 'l'
+    RIGHT = 'r'
 
 class Solution:
     board_size = 4
@@ -8,63 +15,77 @@ class Solution:
         self.board = [[' ' for _ in range(self.board_size)] for _ in range(self.board_size)]
 
 
-    def remove_empty_cells(self, my_board: list[list]) -> list[list]:
-        temp_board = [] 
-        for row in my_board:
-            temp_board.append([c for c in row if c != ' '])
-        return temp_board
+    def make_move(self, instr: Direction) -> None:
+        match instr:
+            case Direction.DOWN:
+                pass
 
-
-    def make_move(self, inst: str) -> None:
-        temp_board = self.remove_empty_cells(self.board)
-        match inst:
-            # move right
-            case 'r':
+            case Direction.RIGHT:
+                temp_board = self.remove_empty_cells(self.board)
                 for row in temp_board:
                     i = len(row) - 1
-                    while i >= 0:
-                        # if adjacent numbers are equal - add value in the right
+                    while i > 0:
+                        # compare pairs from the right; if adjacent numbers are equal - add values in the right cell
                         if row[i] == row[i - 1]:
-                            row[i] = row[i] + row[i - 1]
+                            row[i] = int(row[i]) + int(row[i - 1])
                             row[i - 1] = ' '
-                            i -= 1 # skip merged cell    
+                            i -= 1 # skip added cell    
                         i -= 1
 
                 temp_board = self.remove_empty_cells(temp_board)
-                for row in temp_board:
-                    while len(row) < self.board_size:
-                        row.insert(0, ' ')
+                temp_board = self.prepend_empty_cells(temp_board)
+                self.board = temp_board
 
-            # move up
-            case 'u':
-                pass
-            # move down
-            case 'd':
-                pass
-            # move left
-            case 'l':
+            case Direction.LEFT | Direction.UP:
+                match instr:
+                    case Direction.LEFT:
+                        temp_board = self.remove_empty_cells(self.board)
+                    case Direction.UP:
+                        # Transpose the board to work with columns as rows; then repat the logic for moving left
+                        transposed = [[self.board[y][x] for y in range(self.board_size)] for x in range(self.board_size)]
+                        temp_board = self.remove_empty_cells(transposed)
+
                 for row in temp_board:
                     i = 0
                     while i < len(row) - 1:
-                        # if adjacent numbers are equal - add value in the left
+                        # compare pairs from the left; if adjacent numbers are equal - add values in the left cell
                         if row[i] == row[i + 1]:
-                            row[i] = row[i] + row[i + 1]
+                            row[i] = int(row[i]) + int(row[i + 1])
                             row[i + 1] = ' '
-                            i += 1 # skip merged cell    
+                            i += 1  # skip added cell
                         i += 1
 
                 temp_board = self.remove_empty_cells(temp_board)
-                for row in temp_board:
-                    while len(row) < self.board_size:
-                        row.append(' ')
+                temp_board = self.append_empty_cells(temp_board)
+                match instr:
+                    case Direction.LEFT:
+                        self.board = temp_board
+                    case Direction.UP:
+                        # write columns back to board
+                        for x in range(self.board_size):
+                            for y in range(self.board_size):
+                                self.board[y][x] = temp_board[x][y]              
 
             case _:
                 raise RuntimeError('unknown instruction')
+        
+
+    def remove_empty_cells(self, board: list[list]) -> list[list]:
+        return [[c for c in row if c != ' '] for row in board]
 
 
-        self.board = temp_board
+    def append_empty_cells(self, board: list[list]) -> list[list]:
+        for row in board:
+            while len(row) < self.board_size:
+                row.append(' ')
+        return board
 
-        # return temp_board
+
+    def prepend_empty_cells(self, board: list[list]) -> list[list]:
+        for row in board:
+            while len(row) < self.board_size:
+                row.insert(0, ' ')
+        return board
 
 
     def init_board(self, items: list[tuple[int,int]]) -> None:
