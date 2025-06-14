@@ -22,15 +22,13 @@ class Solution:
 
 
     def make_move(self, instr: Direction, generate_new_item: bool = False) -> GameState:
+        temp_board = self.board
         match instr:
             case Direction.RIGHT | Direction.DOWN:
-                match instr:
-                    case Direction.RIGHT:
-                        temp_board = self.remove_empty_cells(self.board)
-                    case Direction.DOWN:
-                        # transpose the board to work with columns as rows; then repat the logic for moving right
-                        transposed = self.transpose(self.board)
-                        temp_board = self.remove_empty_cells(transposed)
+                # transpose the board to work with columns as rows; then repat the logic for moving right
+                if instr == Direction.DOWN:
+                    temp_board = self.transpose(temp_board)
+                temp_board = self.remove_empty_cells(temp_board)
 
                 for row in temp_board:
                     i = len(row) - 1    # starting from the right
@@ -47,13 +45,10 @@ class Solution:
                 self.board = temp_board if instr == Direction.RIGHT else self.transpose(temp_board)
 
             case Direction.LEFT | Direction.UP:
-                match instr:
-                    case Direction.LEFT:
-                        temp_board = self.remove_empty_cells(self.board)
-                    case Direction.UP:
-                        # transpose the board to work with columns as rows; then repat the logic for moving left
-                        transposed = self.transpose(self.board)
-                        temp_board = self.remove_empty_cells(transposed)
+                # transpose the board to work with columns as rows; then repat the logic for moving left
+                if instr == Direction.UP:
+                    temp_board = self.transpose(temp_board)
+                temp_board = self.remove_empty_cells(temp_board)
 
                 for row in temp_board:
                     i = 0   # starting from the left
@@ -96,25 +91,25 @@ class Solution:
             self.board[y][x] = self.default_item_value
 
 
-    def remove_empty_cells(self, board: list[list]) -> list[list]:
+    def remove_empty_cells(self, board: list[list[int | str]]) -> list[list[int]]:
         return [[c for c in row if c != ' '] for row in board]
 
 
-    def append_empty_cells(self, board: list[list]) -> list[list]:
+    def append_empty_cells(self, board: list[list[int | str]]) -> list[list[int | str]]:
         for row in board:
             while len(row) < self.board_size:
                 row.append(' ')
         return board
 
 
-    def prepend_empty_cells(self, board: list[list]) -> list[list]:
+    def prepend_empty_cells(self, board: list[list[int | str]]) -> list[list[int | str]]:
         for row in board:
             while len(row) < self.board_size:
                 row.insert(0, ' ')
         return board
 
 
-    def transpose(self, board: list[list]) -> list[list]:
+    def transpose(self, board: list[list[int | str]]) -> list[list[int | str]]:
         return [[board[y][x] for y in range(self.board_size)] for x in range(self.board_size)]
 
 
