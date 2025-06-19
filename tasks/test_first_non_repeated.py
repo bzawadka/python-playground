@@ -1,6 +1,6 @@
 # return first non-repeated character in the string
 class Solution:
-    input_string_empty, all_characters_repreated = '', ''
+    input_string_empty, all_characters_repeated = '', ''
 
     def first_non_repeated(self, input_str: str) -> str:
         if not input_str: return self.input_string_empty
@@ -10,7 +10,7 @@ class Solution:
             char_counts[c] = char_counts[c] + 1 if c in char_counts else 1 
 
         if all(char_counts[c] > 1 for c in char_counts):
-            return self.all_characters_repreated
+            return self.all_characters_repeated
 
         first_non_repeated = ''
         for c in input_str:
