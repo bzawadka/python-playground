@@ -67,13 +67,6 @@ class Solution:
             return GameState.WON
         if any(0 in row for row in self.board):
             return GameState.PLAYING
-        # Check if any moves are possible
-        for y in range(self.board_size):
-            for x in range(self.board_size):
-                if x + 1 < self.board_size and self.board[y][x] == self.board[y][x + 1]:
-                    return GameState.PLAYING
-                if y + 1 < self.board_size and self.board[y][x] == self.board[y + 1][x]:
-                    return GameState.PLAYING
         return GameState.LOST
 
 
@@ -92,15 +85,5 @@ class Solution:
 
     def init_board(self, items: list[tuple[int, int]]) -> None:
         self.board = [[0 for _ in range(self.board_size)] for _ in range(self.board_size)]
-        if not items:
-            empty_cells = [(x, y) for y in range(self.board_size)
-                                  for x in range(self.board_size)]
-            for _ in range(self.default_no_of_items):
-                if not empty_cells:
-                    break
-                x, y = random.choice(empty_cells)
-                self.board[y][x] = self.default_item_value
-                empty_cells.remove((x, y))
-        else:
-            for x, y in items:
-                self.board[y][x] = self.default_item_value
+        for x, y in items:
+            self.board[y][x] = self.default_item_value
