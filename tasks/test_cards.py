@@ -8,9 +8,9 @@ from typing import Counter
 
 
 def is_pair_in_the_deck(deck: list[int]) -> bool:
-    card_counts = {-1: -1}
-    for c in deck:
-        card_counts[c] = card_counts.get(c, 0) + 1
+    card_counts = {}
+    for number in deck:
+        card_counts[number] = card_counts.get(number, 0) + 1
 
     for _, v in card_counts.items():
         if v == 2:
@@ -20,9 +20,9 @@ def is_pair_in_the_deck(deck: list[int]) -> bool:
 
 
 def is_trio_in_the_deck(deck: list[int]) -> bool:
-    card_counts = {-1: -1}
-    for c in deck:
-        card_counts[c] = card_counts.get(c, 0) + 1
+    card_counts = dict()
+    for card in deck:
+        card_counts[card] = card_counts.get(card, 0) + 1
 
     return any(v == 3 for _, v in card_counts.items())
 
